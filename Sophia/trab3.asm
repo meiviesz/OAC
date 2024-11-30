@@ -6,7 +6,15 @@ mr: .word 0 0 0 0 0 0 0 0 0
 
 .text
 
-#read_cel(lin, col):
+#a5 - reservado para valor do lado da matriz
+read_cel:
+    addi t0, a0, -1
+    addi t1, a1, -1
+    mul t0, t0, a5 #Endereço do primeiro elemento da linha
+    add t0, t0, t1 #Endereço do elemento correto na matriz
+    add t0, t0, m1 #Endereço do elemento correto na memória
+    lw a0, 0(t0)
+    ret
 
 #write_cel(lin, col, val):
 
@@ -26,4 +34,4 @@ mr: .word 0 0 0 0 0 0 0 0 0
 # coloca o resultado em mr
 
 #imprime(m1, lado):
-# imprime o conte�do da matriz
+# imprime o conte�do da matriz
