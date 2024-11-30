@@ -6,6 +6,11 @@ mr: .word 0 0 0 0 0 0 0 0 0
 
 .text
 
+jal sum
+
+li a7, 10
+ecall
+
 #a5 - reservado para valor do lado da matriz
 read_cel: #a0 = linha. a1 = coluna. a2 = matriz.
     addi t0, a0, -1
@@ -38,6 +43,7 @@ loop_sum:
     sw ra, 0(sp)
     jal read_cel
     lw ra, 0(sp)
+    addi sp, sp, -4
     
     mv t2, a0
     mv a0, t5
@@ -46,6 +52,7 @@ loop_sum:
     sw ra, 0(sp)
     jal read_cel
     lw ra, 0(sp)
+    addi sp, sp, -4
     
     add a2, t2, a0
     mv a0, t5
@@ -54,6 +61,7 @@ loop_sum:
     sw ra, 0(sp)
     jal write_cel
     lw ra, 0(sp)
+    addi sp, sp, -4
 
     beq t6, a5, last_column_sum
     addi t6, t6, 1
