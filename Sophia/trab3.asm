@@ -7,19 +7,29 @@ mr: .word 0 0 0 0 0 0 0 0 0
 .text
 
 #a5 - reservado para valor do lado da matriz
-read_cel:
+read_cel: #a0 = linha. a1 = coluna. a3 = matriz.
     addi t0, a0, -1
     addi t1, a1, -1
     mul t0, t0, a5 #Endereço do primeiro elemento da linha
     add t0, t0, t1 #Endereço do elemento correto na matriz
-    add t0, t0, m1 #Endereço do elemento correto na memória
+    slli t0, t0, 2
+    add t0, t0, a3 #Endereço do elemento correto na memória
     lw a0, 0(t0)
     ret
 
-#write_cel(lin, col, val):
+write_cel: #a0 = linha. a1 = coluna. a3 = valor. a4 = matriz
+    addi t0, a0, -1
+    addi t1, a1, -1
+    mul t0, t0, a5
+    add t0, t0, t1
+    slli t0, t0, 2
+    add t0, t0, a4
+    sw a3, 0(t0)
+    ret
 
-
-#soma(m1, m2, mr, lado):
+soma:
+    li a0, 2
+    li a1, 4
 # 1 elemento da 1 matriz: a0
 # 1 elemento da 2 matriz: a1
 # 1 elemento da matriz resultado: a2
@@ -34,4 +44,4 @@ read_cel:
 # coloca o resultado em mr
 
 #imprime(m1, lado):
-# imprime o conte�do da matriz
+# imprime o conteudo da matriz
