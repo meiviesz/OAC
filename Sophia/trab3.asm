@@ -1,13 +1,14 @@
 .data
-m1: .word 1 2 3 4 5 6 7 8 9
-m2: .word 9 8 7 6 5 4 3 2 1
+m1: .word 3 12 15 4 9 24 16 10 2
+m2: .word 7 4 11 18 32 7 4 8 1
 mr: .word 0 0 0 0 0 0 0 0 0
 
 
 .text
 
-jal sum
+li a5, 3
 
+jal sum
 li a7, 10
 ecall
 
@@ -33,8 +34,8 @@ write_cel: #a0 = linha. a1 = coluna. a2 = valor. a3 = matriz
     ret
 
 sum:
-    li t5, 0
-    li t6, 0
+    li t5, 1
+    li t6, 1
 loop_sum:
     mv a0, t5
     mv a1, t6
@@ -43,7 +44,7 @@ loop_sum:
     sw ra, 0(sp)
     jal read_cel
     lw ra, 0(sp)
-    addi sp, sp, -4
+    addi sp, sp, 4
     
     mv t2, a0
     mv a0, t5
@@ -52,7 +53,7 @@ loop_sum:
     sw ra, 0(sp)
     jal read_cel
     lw ra, 0(sp)
-    addi sp, sp, -4
+    addi sp, sp, 4
     
     add a2, t2, a0
     mv a0, t5
@@ -61,7 +62,7 @@ loop_sum:
     sw ra, 0(sp)
     jal write_cel
     lw ra, 0(sp)
-    addi sp, sp, -4
+    addi sp, sp, 4
 
     beq t6, a5, last_column_sum
     addi t6, t6, 1
