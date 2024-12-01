@@ -6,7 +6,7 @@ m1: .space 100
 m2: .space 100
 mr: .space 100
 
-qts_lados: .ascii "Quantos lados tem suas matrizes? (1 a 10)\n\0"
+qts_lados: .ascii "Quantos lados tem suas matrizes? (1 a 5)\n\0"
 invalido: .ascii "Entrada inválida, encerrando funcao\0"
 texto_valor1: .ascii "Insira valor do elemento \0"
 texto_valor2: .ascii " da matriz \0"
