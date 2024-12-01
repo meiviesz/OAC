@@ -34,8 +34,8 @@ write_cel: #a0 = linha. a1 = coluna. a2 = valor. a3 = matriz
     ret
 
 sum:
-    li t5, 1
-    li t6, 1
+    li t5, 1 #contador de linha
+    li t6, 1 #contador de coluna
 loop_sum:
     mv a0, t5
     mv a1, t6
@@ -45,8 +45,8 @@ loop_sum:
     jal read_cel
     lw ra, 0(sp)
     addi sp, sp, 4
-    
-    mv t2, a0
+    mv t2, a0    
+
     mv a0, t5
     la a2, m2
     addi sp, sp, -4
@@ -75,20 +75,115 @@ last_column_sum:
 end_sum:
     ret
 
+multi:
+    li t5, 1
+    li t6, 1
+    
+loop_multi:
+    mv a0, t5
+    mv a1, t6
+    la a2, m1
+    addi sp, sp, -4
+    sw ra, 0(sp)
+    jal read_cel
+    lw ra, 0(sp)
+    addi sp, sp, 4
+    mv t2, a0   
+    
+    mv a0, t5
+    la a2, m2
+    addi sp, sp, -4
+    sw ra, 0(sp)
+    jal read_cel
+    lw ra, 0(sp)
+    addi sp, sp, 4    
+    
+    mul a2, t2, a0  # multiplica os dois elementos
+    mv a0, t5
+    la a3, mr   
+    addi sp, sp, -4
+    sw ra, 0(sp)
+    jal write_cel
+    lw ra, 0(sp)
+    addi sp, sp, 4
+    
+    beq t6, a5, last_column_multi
+    addi, t6, t6, 1
+    j loop_multi
+    
+last_column_multi:
+    beq t5, a5, end_multi
+    addi t5, t5, 1
+    li t6, 1
+    j loop_multi
+end_multi:
+    ret
 
-
-# 1 elemento da 1 matriz: a0
-# 1 elemento da 2 matriz: a1
-# 1 elemento da matriz resultado: a2
-# largura da matriz: a3
-# soma e coloca em mr (a3)
-
-#multiplica(m1, m2, mr, lado):
-# mesmos parametros da soma
-# matriz mr recebe resultado da mult de m1 por m2
-
-#transposta(m1, mr, lado):
-# coloca o resultado em mr
-
-#imprime(m1, lado):
-# imprime o conteudo da matriz
+transp:
+    li t5, 1
+    li t6, 1
+    
+loop_transp
+    mv a0, t5
+    mv a1, t6
+    la, a2, m1
+    addi sp, sp, -4
+    sw ra, 0(sp)
+    jal read_cel
+    addi sp, sp, 4
+    mv t2, a0
+    
+    mv a0, t6
+    mv a1, t5
+    mv a2, t0
+    la a2, t0
+    addi sp, sp, -4
+    sw ra, 0(sp)
+    jal write_cel
+    lw ra, 0(sp)
+    addi sp, sp, 4
+ 
+    beq t6, a5, last_column_transp
+    addi, t6, t6, 1
+    j loop_transp
+    
+last_column_transp:
+    beq t5, a5, end_transp
+    addi t5, t5, 1
+    li t6, 1
+    j loop_transp
+end_transp:
+    ret    
+    
+                          
+imprime:
+    li t5, 1
+    li t6, 1
+loop_imprime:
+    mv a0, t5
+    mv a1, t6
+    la a3, m1
+    addi sp, sp, -4
+    sw ra, 0(sp)
+    jal write_cel
+    lw ra, 0(sp)
+    addi sp, sp, 4
+    mv a0, a0
+    
+    jal ra, print_int
+    
+     li a0, ' '
+     jal ra, print_char
+     
+    beq t6, a5, last_column_imprime
+    addi, t6, t6, 1
+    j loop_imprime
+    
+last_column_imprime:
+    beq t5, a5, end_imprime
+    addi t5, t5, 1
+    li t6, 1
+    j loop_imprime
+end_timprime:
+    ret    
+         
