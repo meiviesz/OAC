@@ -13,7 +13,12 @@ texto_valor2: .ascii " da matriz \0"
 texto_valor3: .ascii ":\n\0"
 menu_text: .ascii "Selecione uma das opções a seguir:\n\n1) Somar elementos das matrizes 1 e 2\n2) Multiplicar elementos das matrizes 1 e 2\n3) Transportar elementos da matriz 1 para a matriz 2\n4) Exibir uma matriz\n5) Sair\n\0"
 op_inv: .ascii "Opção invalida, tente novamente\n\0"
-print_text: .ascii "Qual matriz que exibir? (1 - Matriz 1; 2 - Matriz 2; 3 - Matriz Resultado\n\0"
+print_text: .ascii "Qual matriz quer exibir? (1 - Matriz 1; 2 - Matriz 2; 3 - Matriz Resultado\n\0"
+transp_text: .ascii "Qual matriz quer transpor? (1 - Matriz 1; 2 - Matriz 2; 3 - Matriz Resultado\n\0"
+
+
+#a5 - reservado para valor do lado da matriz
+#a4 - reservado para valor de seleção do menu
 
 .text
 
@@ -39,7 +44,7 @@ print_text: .ascii "Qual matriz que exibir? (1 - Matriz 1; 2 - Matriz 2; 3 - Mat
     li a7, 10
     ecall
 
-#a5 - reservado para valor do lado da matriz
+
 read_cel: #a0 = linha. a1 = coluna. a2 = matriz.
     addi t0, a0, -1
     addi t1, a1, -1
@@ -241,40 +246,75 @@ end_multi:
     j menu
 
 transp:
+    li a7, 4
+    la a0, transp_text
+    ecall
+    li a7, 5
+    ecall
+    
+    li t1, 1
+    li t2, 2
+    li t3, 3
+    
+    beq a0, t1, tmat1
+    beq a0, t2, tmat2
+    beq a0, t3, tmat3
+    
+    li a7, 4
+    la a0, invalido
+    ecall
+    j menu
+    
+tmat1:
+    la a6, m1
+    j init_transp
+tmat2:
+    la a6, m2
+    j init_transp
+tmat3:
+    la a6, mr
+    
+init_transp:
     li t5, 1
-    li t6, 1
+    li t6, 2
+    addi sp, sp, -4
+    sw ra, 0(sp)
     
 loop_transp:
-    mv a0, t5
-    mv a1, t6
-    la, a2, m1
-    addi sp, sp, -4
-    sw ra, 0(sp)
-    jal read_cel
-    lw ra, 0(sp)
-    addi sp, sp, 4
-    mv t0, a0
+    
     
     mv a0, t5
     mv a1, t6
-    mv a2, t0
-    la a3, m2
-    addi sp, sp, -4
-    sw ra, 0(sp)
+    mv a2, a6
+    jal read_cel
+    mv t3, a0
+    mv a0, t6
+    mv a1, t5
+    jal read_cel
+    mv t4, a0
+    
+    mv a0, t5
+    mv a1, t6
+    mv a2, t4
+    mv a3, a6
     jal write_cel
-    lw ra, 0(sp)
-    addi sp, sp, 4
+    mv a0, t6
+    mv a1, t5
+    mv a2, t3
+    jal write_cel
  
     beq t6, a5, last_column_transp
     addi, t6, t6, 1
     j loop_transp
     
 last_column_transp:
-    beq t5, a5, end_transp
     addi t5, t5, 1
-    li t6, 1
+    beq t5, a5, end_transp
+    addi t6, t5, 1
     j loop_transp
 end_transp:
+    lw ra, 0(sp)
+    addi sp, sp, 4
     #ret
     j menu
     
